@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # custom
+    'app.apps.AppConfig'
 ]
 
 MIDDLEWARE = [
@@ -75,7 +78,7 @@ WSGI_APPLICATION = 'semestralna.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', 
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'user_data',
         'USER': 'root',
         'PASSWORD': 'experience',

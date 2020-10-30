@@ -1,0 +1,72 @@
+body{
+    background-color: dimgrey!important;
+}
+
+img{
+    max-width: 100%;
+    height: auto;
+}
+
+h1{
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+#check{
+    position: relative;
+    left: 50%;
+    transform: translate(-50%,0);
+    width: 250px;
+    height: auto;
+}
+
+#reg{
+    visibility: hidden;
+}
+
+#nav{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+#obrazok-d{
+    display: none;
+}
+
+.center{
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 50%;
+    transform: translate(0px, -50%);
+}
+
+.fas{
+    margin-right: 16px;
+}
+
+@media (min-width: 576px){
+    .navbar{
+        height: 56px;
+    }
+    .navbar-brand{
+        display: none!important;
+    }
+    #navbar{
+        margin-top: 0!important;
+        font-size: 1.2rem!important;
+    }
+    #prihlasovanie{
+        max-width: 500px;
+    }
+    #obrazok-m{
+        display: none;
+    }
+    #obrazok-d{
+        display: inline!important;
+    }
+    #reg{
+        visibility: visible;
+    }
+}
