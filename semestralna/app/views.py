@@ -22,5 +22,10 @@ def user_login(request):
             username=request.POST['meno'], password=request.POST['heslo'])
         if pouzivatel is not None and pouzivatel.is_active:
             login(request, pouzivatel)
-            return HttpResponseRedirect(reverse(''))
+            return render(request, 'app/confirmation.html', {'message': 'Úspešne prihlasený'})
     return render(request, 'app/login.html', {'error': 'Meno alebo heslo sú nesprávne', })
+
+
+def user_logout(request):
+    logout(request)
+    return render(request, 'app/confirmation.html', {'message': 'Úspešne odhlasený'})
