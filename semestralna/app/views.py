@@ -3,6 +3,8 @@ from django.views import View
 from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponseRedirect, request
 from django.urls import reverse
+from .models import Discussion
+from django.views.generic import ListView
 
 context = {}
 
@@ -20,15 +22,17 @@ def set_context(key, value):
     context[key] = value
 
 
-class IndexView(View):
-    def get(self, request):
-        return render(request, 'app/index.html')
+class IndexView(ListView):
+    model = Discussion
+    paginate_by = 10
+    context_object_name = 'discussion'
+    template_name = 'app/index.html'
 
 
 class LoginView(View):
     def get(self, request):
         if request.user.is_authenticated:
-            return render(request, 'app/login_succ.html')
+            return render(request, 'app/confirmation.html', get_context('login'))
         else:
             return render(request, 'app/login.html', get_context('login'))
 
@@ -38,8 +42,9 @@ def user_login(request):
     if request.POST:
         user = authenticate(
             username=request.POST['meno'], password=request.POST['heslo'])
-        if pouzivatel is not None:
+        if user is not None:
             login(request, user)
+            set_context('login', {'message': 'Uspešné prihlásenie', })
             return HttpResponseRedirect(reverse('app:login'))
     set_context('login', {'error': 'Meno alebo heslo sú nesprávne', })
     return HttpResponseRedirect(reverse('app:login'))

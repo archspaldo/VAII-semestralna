@@ -1,20 +1,73 @@
+
 body{
-    background-color: rgb(105, 105, 105)!important
+    background-image: url("/static/images/forestbg.jpg")!important;
+    background-attachment: fixed;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: rgba(255, 255, 255, 0.6)!important;
 }
 
+body::after{
+    top: 0;
+    content: " ";
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: -1;
+}
+
+.item-container{
+    height: 100%;
+    overflow: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.item-container::-webkit-scrollbar{
+    display: none;
+}
+
+.item{
+    background-color:#4b5258;
+    display: flex;
+    margin-top:10px;
+    margin-bottom:10px;
+    border-radius: 10px;
+    height: 100%;
+}
+
+.item-inside{
+    margin: 10px;
+    font-size: 13px;
+    height: auto;
+}
+
+.discussion-item-list{
+    list-style-type: none;
+    padding-left: 0px;
+    margin-bottom: 0px;
+}
+
+.discussion-item-author{
+    font-size: 11px
+}
+
+.discussion-item-description{
+    font-size: 12px
+}
+
+#nav{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
 
 #log{
     height: 100vh;
     margin-top:-56px;
     align-content: center;
-}
-
-#log :hover{
-    background-color: rgb(75, 75, 75)!important;
-}
-
-.fag{
-    color: violet;
 }
 
 img{
@@ -37,12 +90,6 @@ h1{
 
 #reg{
     visibility: hidden;
-}
-
-#nav{
-    position: sticky;
-    top: 0;
-    z-index: 1;
 }
 
 #obrazok-d{

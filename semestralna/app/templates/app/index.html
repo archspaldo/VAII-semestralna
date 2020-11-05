@@ -2,24 +2,32 @@
 
 
 {% block title %}
-Index
+Discussion
 {% endblock title %}
 
 
 {% block body %}
 <div class="container-fluid">
-    <h1>Skúšobná stránka</h1>
-</div>
-<div class="container-fluid">
     <div class="row">
-        <div class="col-sm-4">
-            <img src="https://www.w3schools.com/bootstrap4/paris.jpg" alt="" class="imgP">
+        <div class="col-md-3 item-container">
+            <div class="item">
+                <div class="item-inside">
+                    nig
+                </div>
+            </div>
         </div>
-        <div class="col-sm-4">
-            <img src="https://www.w3schools.com/bootstrap4/paris.jpg" alt="" class="imgP">
-        </div>
-        <div class="col-sm-4">
-            <img src="https://www.w3schools.com/bootstrap4/paris.jpg" alt="" class="imgP">
+        <div class="col-md-9 item-container infinite-container">
+            {% for item in discussion %}
+            <div class="item infinite-item">
+                <div class="item-inside">
+                    <h3 class='discussion-item-title'>{{item.title}}</h3>
+                    <ul class='discussion-item-list'>
+                        <li class='discussion-item-author'>{{item.author}}</li>
+                        <li class='discussion-item-description'>{{item.description}}</li>
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </div>
