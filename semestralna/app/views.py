@@ -36,10 +36,10 @@ class LoginView(View):
 def user_login(request):
     logout(request)
     if request.POST:
-        pouzivatel = authenticate(
+        user = authenticate(
             username=request.POST['meno'], password=request.POST['heslo'])
         if pouzivatel is not None:
-            login(request, pouzivatel)
+            login(request, user)
             return HttpResponseRedirect(reverse('app:login'))
     set_context('login', {'error': 'Meno alebo heslo sú nesprávne', })
     return HttpResponseRedirect(reverse('app:login'))

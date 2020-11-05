@@ -1,5 +1,20 @@
 body{
-    background-color: dimgrey!important;
+    background-color: rgb(105, 105, 105)!important
+}
+
+
+#log{
+    height: 100vh;
+    margin-top:-56px;
+    align-content: center;
+}
+
+#log :hover{
+    background-color: rgb(75, 75, 75)!important;
+}
+
+.fag{
+    color: violet;
 }
 
 img{

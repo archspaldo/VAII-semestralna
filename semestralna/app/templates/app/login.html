@@ -5,9 +5,8 @@ Login
 {% endblock title %}
 
 {% block body %}
-
 <div class="container-fluid center" id="prihlasovanie">
-    <h1>Login</h1>
+    <h1>Prihláste sa</h1>
     <form action="user_login" method="POST">
         {% csrf_token %}
         <div>
@@ -22,9 +21,8 @@ Login
         <div class="form-group">
             <label for="pwd">Heslo</label>
             <input type="password" class="form-control" name="heslo" id="pwd" placeholder="Heslo">
-
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Prihlásiť sa</button>
     </form>
 </div>
 {% endblock body %}
