@@ -1,7 +1,8 @@
 env
-semestralna/semestralna/__pycache__
-semestralna/app/__pycache__
 semestralna/__pycache__
+semestralna/semestralna/__pycache__
+semestralna/app/static/images
+semestralna/app/__pycache__
 semestralna/app/__pycache__
 semestralna/app/__pycache__/__init__.cpython-38.pyc
 semestralna/app/__pycache__/admin.cpython-38.pyc
