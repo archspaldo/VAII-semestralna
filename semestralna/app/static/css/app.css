@@ -58,6 +58,10 @@ body::after{
     font-size: 12px
 }
 
+.discussion-item-stats{
+    display: inline;
+}
+
 #nav{
     position: sticky;
     top: 0;
@@ -106,6 +110,15 @@ h1{
 
 .fas{
     margin-right: 16px;
+}
+
+@media (min-width: 768px){
+    .side-toggler{
+        display: none;
+    }
+    .side-collapse{
+        display: initial!important;
+    }
 }
 
 @media (min-width: 576px){

@@ -1,22 +1,42 @@
 {% extends 'app/base.html' %}
 
 
-{% block title %}
-Discussion
-{% endblock title %}
+{% block title %}Discussion{% endblock title %}
 
 
 {% block body %}
-<div class="container-fluid">
+<div class="container">
     <div class="row">
-        <div class="col-md-3 item-container">
-            <div class="item">
-                <div class="item-inside">
-                    nig
+        <div class="col-lg-3 col-md-4 item-container">
+            <nav class="side-nav">
+                <button class="navbar-toggler side-toggler" type="button" , data-toggle="collapse" ,
+                    data-target="#side-collapsible-id" , aria-controls="side-collapsible-id" , aria-expanded="false" ,
+                    aria-label="Prepnutie">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="item">
+                    <div class="item-inside">
+                        Pridať diskusiu
+                    </div>
                 </div>
-            </div>
+                <div class="item collapse side-collapse" id='side-collapsible-id'>
+                    <div class="item-inside">
+                        <ul class="discussion-item-list">
+                            <li class="side-item">Nejake filtre</li>
+                            <li class="side-item">Nejake filtre</li>
+                            <li class="side-item">Nejake filtre</li>
+                            <li class="side-item">Nejake filtre</li>
+                            <li class="side-item">Nejake filtre</li>
+                            <li class="side-item">Nejake filtre</li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
         </div>
-        <div class="col-md-9 item-container infinite-container">
+        <div class="col-lg-9 col-md-8 item-container infinite-container">
+
+            {% if discussion %}
+
             {% for item in discussion %}
             <div class="item infinite-item">
                 <div class="item-inside">
@@ -25,10 +45,50 @@ Discussion
                         <li class='discussion-item-author'>{{item.author}}</li>
                         <li class='discussion-item-description'>{{item.description}}</li>
                     </ul>
+                    <ul class='discussion-item-list discussion-item-stats'>
+                        <li class='discusion-item-like'>Like</li>
+                        <li class='discussion-item-views'>Views</li>
+                    </ul>
                 </div>
             </div>
             {% endfor %}
+
+            {% if page_obj.has_next %}
+            <div class="item loading">
+                <div class="item-inside">
+                    Načítavajú sa ďalšie príspevky
+                </div>
+            </div>
+            <a class="infinite-more-link" href="?page={{page_obj.next_page_number}}">Načítať viac</a>
+            {% else %}
+            <div class="item loading">
+                <div class="item-inside">
+                    Žiadne ďalšie príspevky
+                </div>
+            </div>
+            {% endif %}
+
+            {% else %}
+            <div class="item">
+                <div class="item-inside">
+                    Nie sú pridané žiadne príspevky
+                </div>
+            </div>
+
+            {% endif %}
         </div>
     </div>
 </div>
+
+<script>
+    var infinite = new Waypoint.Infinite({
+        element: $('.infinite-container')[0],
+        onBeforePageLoad: function () {
+            $('.loading').show();
+        },
+        onAfterPageLoad: function () {
+            $('.loading').hide();
+        }
+    });
+</script>
 {% endblock body %}
