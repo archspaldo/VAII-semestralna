@@ -18,16 +18,15 @@ body::after{
     z-index: -1;
 }
 
-a{
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.6)!important;
-}
-
 .item-container{
     height: 100%;
     overflow: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;
+}
+
+#main-body{
+    max-height: calc(100vh - 56px);
 }
 
 .item-container::-webkit-scrollbar{
@@ -89,10 +88,9 @@ h1{
     transform: translate(0px, -50%);
 }
 
-
-
-@media screen and (min-width: 768px){
-    
+a{
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.6)!important;
 }
 
 @media (min-width: 576px){

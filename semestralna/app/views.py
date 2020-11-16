@@ -11,7 +11,7 @@ import datetime
 
 class IndexView(ListView):
     model = Discussion
-    paginate_by = 1
+    paginate_by = 10
     context_object_name = 'discussion'
     template_name = 'app/index.html'
 
@@ -46,8 +46,12 @@ def user_logout(request):
 
 
 def remove_discussion(request, pk):
-    Discussion.objects.filter(pk=pk).delete()
-    return HttpResponseRedirect(reverse('app:index'))
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            Discussion.objects.filter(pk=pk).delete()
+        return HttpResponseRedirect(reverse('app:index'))
+    else:
+        return HttpResponseRedirect(reverse('app:login'))
 
 
 def add_discussion(request):
@@ -65,7 +69,6 @@ def add_discussion(request):
                 return HttpResponseRedirect(reverse('app:index'))
         else:
             form = DiscussionForm()
-
         return render(request, 'app/form.html', {'form': form})
     else:
         return HttpResponseRedirect(reverse('app:login'))

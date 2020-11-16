@@ -29,57 +29,59 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-9 col-md-8 item-container infinite-container">
+        <div class="col-lg-9 col-md-8 item-container" id='main-body'>
+            <div class="infinite-container">
 
-            {% if discussion %}
+                {% if discussion %}
 
-            {% for item in discussion %}
-            <div class="item infinite-item">
-                <div class="item-inside">
-                    <h3 class='discussion-item-title'>{{item.title}}</h3>
-                    <ul class='discussion-item-list'>
-                        <li class='discussion-item-author'>{{item.author}}</li>
-                        <li class='discussion-item-description'>{{item.description}}</li>
-                    </ul>
-                    <ul class='discussion-item-list discussion-item-stats'>
-                        <li class='discusion-item-like'>Like</li>
-                        <li class='discussion-item-views'>Views</li>
-                        <li><a href="remove_discussion/{{item.id}}">Odstraniť diskusiu</a></li>
-                    </ul>
+                {% for item in discussion %}
+                <div class="item infinite-item">
+                    <div class="item-inside">
+                        <h3 class='discussion-item-title'>{{item.title}}</h3>
+                        <ul class='discussion-item-list'>
+                            <li class='discussion-item-author'>{{item.author}}</li>
+                            <li class='discussion-item-description'>{{item.description}}</li>
+                        </ul>
+                        <ul class='discussion-item-list discussion-item-stats'>
+                            <li class='discusion-item-like'>Like</li>
+                            <li class='discussion-item-views'>Views</li>
+                            <li><a href="remove_discussion/{{item.id}}">Odstraniť diskusiu</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            {% endfor %}
+                {% endfor %}
 
-            {% if page_obj.has_next %}
+                {% else %}
+                <div class="item">
+                    <div class="item-inside">
+                        Nie sú pridané žiadne príspevky
+                    </div>
+                </div>
+
+                {% endif %}
+            </div>
             <div class="item loading">
                 <div class="item-inside">
                     Načítavajú sa ďalšie príspevky
                 </div>
             </div>
+            {% if page_obj.has_next %}
             <a class="infinite-more-link" href="?page={{page_obj.next_page_number}}">Načítať viac</a>
-            {% endif %}
-
-            {% else %}
-            <div class="item">
-                <div class="item-inside">
-                    Nie sú pridané žiadne príspevky
-                </div>
-            </div>
-
             {% endif %}
         </div>
     </div>
 </div>
-
 <script>
     var infinite = new Waypoint.Infinite({
         element: $('.infinite-container')[0],
+        context: document.getElementById('main-body'),
         onBeforePageLoad: function () {
             $('.loading').show();
         },
-        onAfterPageLoad: function () {
+        onAfterPageLoad: function ($items) {
             $('.loading').hide();
         }
     });
 </script>
+
 {% endblock body %}
