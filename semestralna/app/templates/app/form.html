@@ -1,0 +1,17 @@
+{% extends 'app/base.html' %}
+
+
+{% block title %}
+Form
+{% endblock title %}
+
+
+{% block body %}
+<div class="container-fluid center" id='prihlasenie'>
+    <form action="add_discussion" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Odoslať">
+    </form>
+</div>
+{% endblock body %}

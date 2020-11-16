@@ -8,18 +8,14 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-3 col-md-4 item-container">
-            <nav class="side-nav">
-                <button class="navbar-toggler side-toggler" type="button" , data-toggle="collapse" ,
-                    data-target="#side-collapsible-id" , aria-controls="side-collapsible-id" , aria-expanded="false" ,
-                    aria-label="Prepnutie">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            <div class="side-nav" id="side-nav">
                 <div class="item">
                     <div class="item-inside">
-                        Pridať diskusiu
+                        <a href="add_discussion">Pridať diskusiu</a>
                     </div>
                 </div>
-                <div class="item collapse side-collapse" id='side-collapsible-id'>
+
+                <div class="item">
                     <div class="item-inside">
                         <ul class="discussion-item-list">
                             <li class="side-item">Nejake filtre</li>
@@ -31,7 +27,7 @@
                         </ul>
                     </div>
                 </div>
-            </nav>
+            </div>
         </div>
         <div class="col-lg-9 col-md-8 item-container infinite-container">
 
@@ -48,6 +44,7 @@
                     <ul class='discussion-item-list discussion-item-stats'>
                         <li class='discusion-item-like'>Like</li>
                         <li class='discussion-item-views'>Views</li>
+                        <li><a href="remove_discussion/{{item.id}}">Odstraniť diskusiu</a></li>
                     </ul>
                 </div>
             </div>
@@ -60,12 +57,6 @@
                 </div>
             </div>
             <a class="infinite-more-link" href="?page={{page_obj.next_page_number}}">Načítať viac</a>
-            {% else %}
-            <div class="item loading">
-                <div class="item-inside">
-                    Žiadne ďalšie príspevky
-                </div>
-            </div>
             {% endif %}
 
             {% else %}

@@ -18,6 +18,11 @@ body::after{
     z-index: -1;
 }
 
+a{
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.6)!important;
+}
+
 .item-container{
     height: 100%;
     overflow: auto;
@@ -30,8 +35,7 @@ body::after{
 }
 
 .item{
-    background-color:#4b5258;
-    display: flex;
+    background-color:#4b5258;    
     margin-top:10px;
     margin-bottom:10px;
     border-radius: 10px;
@@ -39,7 +43,7 @@ body::after{
 }
 
 .item-inside{
-    margin: 10px;
+    padding: 10px;
     font-size: 13px;
     height: auto;
 }
@@ -68,32 +72,9 @@ body::after{
     z-index: 1;
 }
 
-#log{
-    height: 100vh;
-    margin-top:-56px;
-    align-content: center;
-}
-
-img{
-    max-width: 100%;
-    height: auto;
-}
-
 h1{
     text-align: center;
     padding-bottom: 20px;
-}
-
-#check{
-    position: relative;
-    left: 50%;
-    transform: translate(-50%,0);
-    width: 250px;
-    height: auto;
-}
-
-#reg{
-    visibility: hidden;
 }
 
 #obrazok-d{
@@ -108,17 +89,10 @@ h1{
     transform: translate(0px, -50%);
 }
 
-.fas{
-    margin-right: 16px;
-}
 
-@media (min-width: 768px){
-    .side-toggler{
-        display: none;
-    }
-    .side-collapse{
-        display: initial!important;
-    }
+
+@media screen and (min-width: 768px){
+    
 }
 
 @media (min-width: 576px){
@@ -140,8 +114,5 @@ h1{
     }
     #obrazok-d{
         display: inline!important;
-    }
-    #reg{
-        visibility: visible;
     }
 }

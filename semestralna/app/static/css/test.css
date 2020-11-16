@@ -1,0 +1,50 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.topnav{
+    overflow: hidden;
+    background-color: rgb(50, 50, 50);
+}
+
+.navbar a{
+    text-decoration: none;
+}
+
+.topnav a{
+    float: left;
+    display: block;
+    color: rgb(150, 150, 150);
+    padding: 14px 16px;
+    font-size: 17px;   
+}
+
+.topnav a:hover{
+    background-color: rgb(150, 150, 150);
+    color: rgb(50, 50, 50);
+}
+
+.navbar .icon{
+    float: right;
+}
+
+.topnavmenu{
+    display: none;
+}
+
+.topnavmenu.expand{
+    float: none;
+    display: block;
+    text-align: left;
+}
+
+@media screen and (min-width:576px){
+    .topnavmenu{
+        display: initial;
+    }
+    .navbar .icon{
+        display: none;
+    }
+}
