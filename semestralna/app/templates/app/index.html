@@ -11,7 +11,7 @@
             <div class="side-nav" id="side-nav">
                 <div class="item">
                     <div class="item-inside">
-                        <a href="add_discussion">Pridať diskusiu</a>
+                        <a href="add">Pridať diskusiu</a>
                     </div>
                 </div>
 
@@ -37,7 +37,7 @@
                 {% for item in discussion %}
                 <div class="item infinite-item">
                     <div class="item-inside">
-                        <h3 class='discussion-item-title'>{{item.title}}</h3>
+                        <h3 class='discussion-item-title'><a href="edit/{{item.id}}">{{item.title}}</a></h3>
                         <ul class='discussion-item-list'>
                             <li class='discussion-item-author'>{{item.author}}</li>
                             <li class='discussion-item-description'>{{item.description}}</li>
@@ -45,7 +45,6 @@
                         <ul class='discussion-item-list discussion-item-stats'>
                             <li class='discusion-item-like'>Like</li>
                             <li class='discussion-item-views'>Views</li>
-                            <li><a href="remove_discussion/{{item.id}}">Odstraniť diskusiu</a></li>
                         </ul>
                     </div>
                 </div>

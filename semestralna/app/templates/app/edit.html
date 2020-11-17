@@ -1,0 +1,34 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Editing{% endblock title %}
+
+
+{% block body %}
+
+
+{% if discussion is not None %}
+<div class="container-fluid">
+    <div>{{discussion.title}}</div>
+    <div>{{discussion.description}}</div>
+    <div>{{discussion.author}}</div>
+    <div>{{discussion.date}}</div>
+</div>
+
+{% if form %}
+<div class="container-fluid center">
+    <a href="{% url 'app:remove_discussion' discussion.id%}">Odstraniť diskusiu</a>
+    <form action="{% url 'app:edit' discussion.id%}" method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Odoslať">
+    </form>
+</div>
+{% endif %}
+{% else %}
+<div>Diskúsia už neexistuje</div>
+{% endif %}
+
+
+
+
+{% endblock body %}

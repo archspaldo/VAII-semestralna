@@ -33,6 +33,10 @@ body::after{
     display: none;
 }
 
+.loading{
+    display: none;
+}
+
 .item{
     background-color:#4b5258;    
     margin-top:10px;
@@ -62,7 +66,11 @@ body::after{
 }
 
 .discussion-item-stats{
-    display: inline;
+    display: flex;
+}
+
+.discussion-item-stats li{
+    padding-right: 10px;
 }
 
 #nav{

@@ -7,8 +7,8 @@ Form
 
 
 {% block body %}
-<div class="container-fluid center" id='prihlasenie'>
-    <form action="add_discussion" method="post">
+<div class="container-fluid center">
+    <form action="add" method="post">
         {% csrf_token %}
         {{form.as_p}}
         <input type="submit" value="Odoslať">
