@@ -7,28 +7,33 @@
 
 
 {% if discussion is not None %}
-<div class="container-fluid">
-    <div>{{discussion.title}}</div>
-    <div>{{discussion.description}}</div>
-    <div>{{discussion.author}}</div>
-    <div>{{discussion.date}}</div>
-</div>
-
-{% if form %}
 <div class="container-fluid center">
-    <a href="{% url 'app:remove_discussion' discussion.id%}">Odstraniť diskusiu</a>
+    <h1>Správa diskúsie</h1>
+    <div class="item">
+        <div class="item-inside">
+            {% if form %}
+            <a href="{% url 'app:remove_discussion' discussion.id%}"><i class="fas fa-times" id='delete'></i></a>
+            {% endif %}
+            <ul class="discussion-item-list">
+                <li>{{discussion.title}}</li>
+                <li>{{discussion.description}}</li>
+                <li>{{discussion.author}}</li>
+                <li>{{discussion.date}}</li>
+            </ul>
+        </div>
+    </div>
+
+    {% if form %}
     <form action="{% url 'app:edit' discussion.id%}" method="post">
         {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="Odoslať">
+        <div class="container-fluid form">
+            {{ form }}
+            <input type="submit" value="Upraviť">
+        </div>
     </form>
 </div>
 {% endif %}
 {% else %}
 <div>Diskúsia už neexistuje</div>
 {% endif %}
-
-
-
-
 {% endblock body %}

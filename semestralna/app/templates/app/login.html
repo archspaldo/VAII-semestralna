@@ -9,13 +9,10 @@ Login
     <h1>Prihláste sa</h1>
     <form action="login" method="POST">
         {% csrf_token %}
-        <div class="container-fluid">
-            <form action="user_login" method="post">
-                {{form.as_p}}
-                <input type="submit" value="Prihlásiť sa">
-            </form>
+        <div class="container-fluid form">
+            {{ form }}
+            <input type="submit" value="Prihlásiť sa">
         </div>
-
     </form>
 </div>
 {% endblock body %}

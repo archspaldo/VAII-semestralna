@@ -25,6 +25,10 @@ body::after{
     scrollbar-width: none;
 }
 
+.form{
+    display:grid;
+}
+
 #main-body{
     max-height: calc(100vh - 56px);
 }
@@ -101,6 +105,11 @@ a{
     color: rgba(255, 255, 255, 0.6)!important;
 }
 
+#delete{
+    position: absolute;
+    right: 25px;
+}
+
 @media (min-width: 576px){
     .navbar{
         height: 56px;
@@ -112,7 +121,7 @@ a{
         margin-top: 0!important;
         font-size: 1.2rem!important;
     }
-    #prihlasovanie{
+    .center{
         max-width: 500px;
     }
     #obrazok-m{
@@ -120,5 +129,10 @@ a{
     }
     #obrazok-d{
         display: inline!important;
+    }
+
+    #odhlasenie{
+        position: absolute;
+        right: 16px
     }
 }

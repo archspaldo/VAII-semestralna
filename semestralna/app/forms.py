@@ -2,7 +2,8 @@ from django import forms
 
 
 class DiscussionForm(forms.Form):
-    title = forms.CharField(label='Názov diskusie', max_length=255)
+    title = forms.CharField(label='Názov diskusie',
+                            max_length=255, min_length=3)
     description = forms.CharField(
         widget=forms.Textarea, label='Popis diskusie')
 

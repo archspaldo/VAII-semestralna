@@ -7,11 +7,14 @@ Form
 
 
 {% block body %}
-<div class="container-fluid center">
+<div class="container-fluid center" id='prihlasovanie'>
+    <h1>Pridánie diskúsie</h1>
     <form action="add" method="post">
         {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="Odoslať">
+        <div class="container-fluid form">
+            {{ form }}
+            <input type="submit" value="Odoslať">
+        </div>
     </form>
 </div>
 {% endblock body %}
