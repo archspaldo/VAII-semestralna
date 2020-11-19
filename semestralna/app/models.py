@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 class Discussion(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, unique=True)
     description = models.TextField()
     author = models.ForeignKey(
         get_user_model(), null=True, on_delete=models.SET_NULL)

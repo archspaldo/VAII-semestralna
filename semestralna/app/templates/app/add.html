@@ -9,6 +9,9 @@ Form
 {% block body %}
 <div class="container-fluid center" id='prihlasovanie'>
     <h1>Pridánie diskúsie</h1>
+    {% if error %}
+    <h2>{{error}}</h2>
+    {% endif %}
     <form action="add" method="post">
         {% csrf_token %}
         <div class="container-fluid form">

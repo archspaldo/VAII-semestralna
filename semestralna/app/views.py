@@ -41,6 +41,11 @@ class LoginView(View):
 class EditView(View):
     def get(self, request, pk):
         discussion = Discussion.objects.filter(pk=pk).first()
+        if request.GET.get('error'):
+            if request.GET.get('error') == '1':
+                error = 'Neplatný názov'
+            if request.GET.get('error') == '2':
+                error = 'Zadaný názov už je použitý'
         if discussion is not None and (request.user.is_superuser or request.user == discussion.author):
             form = DiscussionForm()
         else:
@@ -55,26 +60,39 @@ class EditView(View):
                 title=form.cleaned_data['title'],
                 description=form.cleaned_data['description'],
                 author=request.user)
-            discussion.save()
+            try:
+                discussion.save()
+            except:
+                return HttpResponseRedirect("?error=2")
         return HttpResponseRedirect(reverse('app:edit', args=(pk,)))
 
 
 class AddView(View):
     def get(self, request):
         if request.user.is_authenticated:
+            error = None
+            if request.GET.get('error'):
+                if request.GET.get('error') == '1':
+                    error = 'Neplatný názov'
+                if request.GET.get('error') == '2':
+                    error = 'Zadaný nźov už je použitý'
             form = DiscussionForm()
-            return render(request, 'app/add.html', {'form': form})
+            return render(request, 'app/add.html', {'form': form, 'error': error})
         return HttpResponseRedirect(reverse('app:login'))
 
     def post(self, request):
         form = DiscussionForm(request.POST)
         if form.is_valid():
-            discussion = Discussion.objects.create(
+            discussion = Discussion(
                 title=form.cleaned_data['title'],
                 description=form.cleaned_data['description'],
                 author=request.user)
+            try:
+                discussion.save()
+            except:
+                return HttpResponseRedirect("?error=2")
             return HttpResponseRedirect(reverse('app:edit', args=(discussion.id,)))
-        return HttpResponseRedirect(reverse('app:add'))
+        return HttpResponseRedirect("?error=1")
 
 
 def user_logout(request):

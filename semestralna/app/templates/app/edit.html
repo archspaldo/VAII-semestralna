@@ -9,6 +9,9 @@
 {% if discussion is not None %}
 <div class="container-fluid center">
     <h1>Správa diskúsie</h1>
+    {% if error %}
+    <h2>{{error}}</h2>
+    {% endif %}
     <div class="item">
         <div class="item-inside">
             {% if form %}
