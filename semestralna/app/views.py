@@ -36,8 +36,6 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
         return HttpResponseRedirect(reverse('app:login'))
-        return
-
 
 class EditView(View):
     def get(self, request, pk):
