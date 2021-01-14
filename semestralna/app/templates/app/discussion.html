@@ -1,0 +1,23 @@
+{% extends 'app/base.html' %}
+
+{% block title %}
+Discussion
+{% endblock title %}
+
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        
+        {% if discussion %}
+            
+            {% for item in discussion %}
+                {{item}}
+            {% endfor %}
+                
+        {% endif %}
+            
+    </div>
+</div>
+{% endblock body %}
+    

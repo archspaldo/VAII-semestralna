@@ -111,6 +111,13 @@ a{
     right: 25px;
 }
 
+.errorList {
+    position: relative;
+    left: 5%;
+    font-size: 10px;
+    color: red;
+}
+
 @media (min-width: 576px){
     .navbar{
         height: 56px;

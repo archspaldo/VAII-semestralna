@@ -3,7 +3,7 @@ from django.views import View
 from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponseRedirect, request
 from django.urls import reverse
-from .models import Discussion
+from .models import Discussion, Comment
 from django.views.generic import ListView
 from .forms import DiscussionForm, LoginForm
 
@@ -29,22 +29,22 @@ class LoginView(View):
             return render(request, 'app/login.html', {'form': form})
 
     def post(self, request):
-        form = LoginForm(request.POST)
+        form = LoginForm(data=request.POST)
         if form.is_valid():
             user = authenticate(
                 username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-            if user is not None:
-                login(request, user)
-        return HttpResponseRedirect(reverse('app:login'))
+            login(request, user)
+            return HttpResponseRedirect(reverse('app:login'))
+        return render(request, 'app/login.html', {'form': form})
+
+class DiscussionView(ListView):
+    def get(self, request, pk):
+        discussion = Comment.objects.filter(discussion_id_id=pk, parent_id_id=None)
+        return render(request, 'app/discussion.html', {'discussion': discussion})
 
 class EditView(View):
     def get(self, request, pk):
         discussion = Discussion.objects.filter(pk=pk).first()
-        if request.GET.get('error'):
-            if request.GET.get('error') == '1':
-                error = 'Neplatný názov'
-            if request.GET.get('error') == '2':
-                error = 'Zadaný názov už je použitý'
         if discussion is not None and (request.user.is_superuser or request.user == discussion.author):
             form = DiscussionForm()
         else:
@@ -59,24 +59,15 @@ class EditView(View):
                 title=form.cleaned_data['title'],
                 description=form.cleaned_data['description'],
                 author=request.user)
-            try:
-                discussion.save()
-            except:
-                return HttpResponseRedirect("?error=2")
+            discussion.save()
         return HttpResponseRedirect(reverse('app:edit', args=(pk,)))
 
 
 class AddView(View):
     def get(self, request):
         if request.user.is_authenticated:
-            error = None
-            if request.GET.get('error'):
-                if request.GET.get('error') == '1':
-                    error = 'Neplatný názov'
-                if request.GET.get('error') == '2':
-                    error = 'Zadaný nźov už je použitý'
             form = DiscussionForm()
-            return render(request, 'app/add.html', {'form': form, 'error': error})
+            return render(request, 'app/add.html', {'form': form})
         return HttpResponseRedirect(reverse('app:login'))
 
     def post(self, request):
@@ -86,12 +77,8 @@ class AddView(View):
                 title=form.cleaned_data['title'],
                 description=form.cleaned_data['description'],
                 author=request.user)
-            try:
-                discussion.save()
-            except:
-                return HttpResponseRedirect("?error=2")
+            discussion.save()
             return HttpResponseRedirect(reverse('app:edit', args=(discussion.id,)))
-        return HttpResponseRedirect("?error=1")
 
 
 def user_logout(request):
