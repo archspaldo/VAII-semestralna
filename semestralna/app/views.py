@@ -1,11 +1,14 @@
+from django.core.checks import messages
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth import login, logout, authenticate
-from django.http import HttpResponseRedirect, request
+from django.http import HttpResponseRedirect, request, HttpResponse
 from django.urls import reverse
 from .models import Discussion, Comment
 from django.views.generic import ListView
-from .forms import DiscussionForm, LoginForm
+from .forms import DiscussionForm, LoginForm, ReplyForm
+from urllib.parse import unquote
+import json
 
 
 class IndexView(ListView):
@@ -39,8 +42,10 @@ class LoginView(View):
 
 class DiscussionView(ListView):
     def get(self, request, pk):
-        discussion = Comment.objects.filter(discussion_id_id=pk, parent_id_id=None)
-        return render(request, 'app/discussion.html', {'discussion': discussion})
+        topic = Discussion.objects.filter(pk=pk).first()
+        comments = Comment.objects.filter(discussion_id_id=pk, parent_id_id=None)
+        is_authorized = request.user.is_superuser or request.user == topic.author
+        return render(request, 'app/discussion.html', {'topic' : topic, 'comments': comments, 'is_authorized' : is_authorized,})
 
 class EditView(View):
     def get(self, request, pk):
@@ -48,6 +53,7 @@ class EditView(View):
         if discussion is not None and (request.user.is_superuser or request.user == discussion.author):
             form = DiscussionForm()
         else:
+
             form = None
         return render(request, 'app/edit.html', {'discussion': discussion, 'form': form})
 
@@ -94,3 +100,27 @@ def remove_discussion(request, pk):
         return HttpResponseRedirect(reverse('app:index'))
     else:
         return HttpResponseRedirect(reverse('app:login'))
+    
+def get_comment(request, pk):
+    comments = Comment.objects.raw('''WITH RECURSIVE comments AS (
+        SELECT * FROM app_comment WHERE id = %s
+        UNION ALL
+        SELECT m.* FROM app_comment AS m JOIN comments AS t ON m.parent_id_id = t.id
+        )
+        SELECT * FROM comments;''', [pk])
+    return comments
+
+def reply(request):
+    if request.is_ajax() and request.method == 'POST' and request.user.is_authenticated:
+        data = json.loads(request.body)
+        print(data)
+        form = ReplyForm(data)
+        if form.is_valid():
+            comment = Comment(
+                discussion_id = Discussion.objects.all().filter(pk=form.cleaned_data['topic']).first(),
+                parent_id = Comment.objects.all().filter(pk=form.cleaned_data['parent_id']).first(),
+                message = form.cleaned_data['message'],
+                author = request.user,
+            )
+            comment.save()
+    return HttpResponse()

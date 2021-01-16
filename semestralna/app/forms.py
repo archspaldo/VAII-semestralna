@@ -17,19 +17,6 @@ class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
 
-    """
-    class Meta:
-        model = User()
-        fields = ['username', 'password']
-        labels = {
-            'username': _('Prihlasovacie meno'),
-            'password': _('Heslo'),
-        }
-        help_texts = {
-            'username': None,
-        }
-
-    """
     username = forms.CharField(
         label='Prihlásovacie meno',
         max_length=31, min_length=3, strip=True, 
@@ -48,7 +35,10 @@ class LoginForm(AuthenticationForm):
             self.add_error('password', forms.ValidationError(_('Neznáme heslo'), code='invalid'))
         return cleaned_data
   
-
+class ReplyForm(forms.Form):
+    message = forms.CharField()
+    topic = forms.IntegerField()
+    parent_id = forms.IntegerField()
 
 
         

@@ -24,13 +24,13 @@ class Comment(models.Model):
     def __str__(self) -> str:
         return self.message
 
-    def get_comments(self):
+    def get_comments(id):
         comments = Comment.objects.raw('''WITH RECURSIVE comments AS (
             SELECT * FROM app_comment WHERE id = %s
             UNION ALL
             SELECT m.* FROM app_comment AS m JOIN comments AS t ON m.parent_id_id = t.id
             )
-            SELECT * FROM comments;''', [self.id])
+            SELECT * FROM comments;''', [id])
         return comments
 
     def delete_comment(self):
