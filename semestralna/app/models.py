@@ -22,16 +22,16 @@ class Comment(models.Model):
     date = models.DateTimeField(default=datetime.now, null=True)
 
     def __str__(self) -> str:
-        return self.message
+        return (str)(self.id)
 
-    def get_comments(id):
-        comments = Comment.objects.raw('''WITH RECURSIVE comments AS (
-            SELECT * FROM app_comment WHERE id = %s
-            UNION ALL
-            SELECT m.* FROM app_comment AS m JOIN comments AS t ON m.parent_id_id = t.id
-            )
-            SELECT * FROM comments;''', [id])
-        return comments
+    def get_comments(self, get_self):
+        r = []
+        for c in Comment.objects.all().filter(parent_id=self).select_related('author'):
+            r.append({ 'id' : c.id ,'parent' : c.parent_id.id, 'message' : c.message, 'author' : c.author.username, 'date' : c.date})
+            _r = c.get_comments(True)
+            if 0 < len(_r):
+                r.extend(_r)
+        return r
 
     def delete_comment(self):
         self.message = None

@@ -1,110 +1,55 @@
 {% extends 'app/base.html' %}
+{% load static %}
 
 {% block title %}
 Discussion
 {% endblock title %}
 
+{% block script %}
+    <script src="{% static 'js\discussion.js' %}" acync></script>
+{% endblock script %}
 
 {% block body %}
 <div class="container">
     <div class="row">
         <div class="col-lg-9 col-md-8 item-container" id='main-body'>
-            <div class="item item-inside">
-                    {% if is_authorized %}
-                    
-                    {% endif %}
-                    {% if topic %}
-                    <ul class="discussion-item-list">
-                        <li>{{topic.title}}</li>
-                        <li>{{topic.description}}</li>
-                        <li>{{topic.author}}</li>
-                        <li>{{topic.date}}</li>
-                    </ul>
-                    {% endif %}
+            <div class="item item-inside" id="topic-{{topic.id}}">
+                {% if is_authorized %}
+                {% endif %}
+                {% if topic %}
+                <ul class="discussion-item-list">
+                    <li>{{topic.title}}</li>
+                    <li>{{topic.description}}</li>
+                    <li>{{topic.author}}</li>
+                    <li>{{topic.date}}</li>
+                </ul>
+                {% endif %}
             </div>
-            
             {% for item in comments %}
                 <div id="post-{{item.id}}" class="item item-inside">
-                    {{item.message}}
-                    {{item.author}}
-                    
-                    {% if item.parent_id %}
-                        {{item.parent_id}}
-                    {% endif %}
-                    <i class="fas fa-reply"></i>
-                    
+                    <div>
+                        {{item.message}}
+                    </div>
+                    <div>
+                        {{item.author}}
+                    </div>
+                    <div>
+                        <i class="fas fa-reply"></i>
+                        <i class="fas fa-eye"></i>
+                    </div>
                 </div>
-                
-
             {% endfor %}
-                
         </div>
-        
-        
-            
-        
         {% if discussion %}
-            
             {% for item in discussion %}
                 {{item}}
             {% endfor %}
-                
         {% endif %}
-            
     </div>
 </div>
 {% endblock body %}
 
 
-{% block script %}
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            replies = document.querySelectorAll(".fa-reply");
-            replies.forEach(element => {
-                element.addEventListener("click", (event) => {
-                    inp = document.createElement("INPUT");
-                    inp.setAttribute("type", "text");
-                    inp.classList.add("reply-text");
-                    but = document.createElement("INPUT");
-                    but.setAttribute("type", "submit");
-                    but.value = "Odpovedať";
-                    but.addEventListener("click", (event) => {
-                        event.preventDefault();
-                        reply(event.currentTarget);
-                    });
-                    form = document.createElement("form");
-                    form.setAttribute("method", "post");
-                    form.setAttribute("action", "reply");
-                    form.setAttribute("id", "post-form");
-                    form.appendChild(inp);
-                    form.appendChild(but);
-                    el = document.createElement("div");
-                    el.classList.add("item-inside");
-                    el.classList.add("reply-form");
-                    el.appendChild(form);
-                    event.currentTarget.parentNode.insertBefore(el, event.currentTarget.nextSibling);
-                })
-            });
-        })
-    </script>
-    <script>
-        function reply(elem) {
-            var ajaxRequest;
-            try {
-                ajaxRequest = new XMLHttpRequest();
-            } catch (e) {
-                alert("Nie je možné spojenie");
-                return false;
-            }
-            ajaxRequest.open("POST", "/reply", true);
-            ajaxRequest.setRequestHeader("Content-type", "application/json");
-            ajaxRequest.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-            ajaxRequest.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-            ajaxRequest.onreadystatechange = () => {
-            }
-            ajaxRequest.send(JSON.stringify({'message' : elem.parentNode.querySelector(".reply-text").value, 'topic' : "{{topic.id}}", 'parent_id' : elem.parentNode.parentNode.parentNode.getAttribute("id").split('-')[1]}));
-        }
-    </script>
-{% endblock script %}
+
     
     

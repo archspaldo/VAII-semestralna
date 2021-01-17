@@ -13,4 +13,5 @@ urlpatterns = [
          views.remove_discussion, name='remove_discussion'),
     path('discussion/<int:pk>', views.DiscussionView.as_view(), name='discussion'),
     path('reply', views.reply, name='reply'),
+    path('comments/<int:pk>', views.get_comment, name='comments'),
 ]

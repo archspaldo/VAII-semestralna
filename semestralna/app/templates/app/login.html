@@ -1,9 +1,14 @@
 {% extends 'app/base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block title %}
 Login
 {% endblock title %}
+
+{% block script %}
+<script src="{% static 'js\login.js' %}" async></script>
+{% endblock script %}
 
 {% block body %}
 <div class="container-fluid center" id="prihlasovanie">
@@ -17,17 +22,3 @@ Login
 </div>
 {% endblock body %}
 
-{% block script %}
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        error_list = document.querySelectorAll(".error");
-        for (let index = 0; index < error_list.length; index++) {
-            error_list[index].addEventListener('keyup', (event) => {
-                event.currentTarget.classList.remove("error");
-                event.currentTarget.querySelector(".help-block").remove();
-            })
-        }
-    })
-</script>
-
-{% endblock script %}

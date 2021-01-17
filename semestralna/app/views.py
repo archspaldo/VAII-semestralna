@@ -1,8 +1,9 @@
 from django.core.checks import messages
+from django.core import serializers
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth import login, logout, authenticate
-from django.http import HttpResponseRedirect, request, HttpResponse
+from django.http import HttpResponseRedirect, request, HttpResponse, JsonResponse
 from django.urls import reverse
 from .models import Discussion, Comment
 from django.views.generic import ListView
@@ -102,13 +103,11 @@ def remove_discussion(request, pk):
         return HttpResponseRedirect(reverse('app:login'))
     
 def get_comment(request, pk):
-    comments = Comment.objects.raw('''WITH RECURSIVE comments AS (
-        SELECT * FROM app_comment WHERE id = %s
-        UNION ALL
-        SELECT m.* FROM app_comment AS m JOIN comments AS t ON m.parent_id_id = t.id
-        )
-        SELECT * FROM comments;''', [pk])
-    return comments
+    if request.is_ajax() and request.method == 'GET':
+        comment = Comment.objects.filter(pk = pk).first()
+        comments = comment.get_comments(False)
+        return JsonResponse({'comments': comments}, status=200)
+    return JsonResponse({'error': ''}, status=400)
 
 def reply(request):
     if request.is_ajax() and request.method == 'POST' and request.user.is_authenticated:
@@ -123,4 +122,7 @@ def reply(request):
                 author = request.user,
             )
             comment.save()
-    return HttpResponse()
+            ser_comment = serializers.serialize('json', [comment,])[1:-1]
+            return JsonResponse({'comment': ser_comment, 'author' : request.user.username}, status=200)
+        return JsonResponse({'error': form.errors}, status=400)
+    return JsonResponse({'error': ''}, status=400)
