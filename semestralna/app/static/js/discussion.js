@@ -1,53 +1,127 @@
 document.addEventListener("DOMContentLoaded", () => {
-    replies = document.querySelectorAll(".fa-reply");
+    var replies = document.querySelectorAll(".fa-reply");
     replies.forEach(element => {
-        element.addEventListener("click", create_form)
+        element.addEventListener("click", reply)
     });
     replies = document.querySelectorAll(".fa-eye")
     replies.forEach(element => {
         element.addEventListener("click", show_replies)
     });
 });
+
+function create_reply(id, parent, author, date, message) {
+    var selector = '[data-comment-id = ' + '"' + parent + '"' +']';
+    var par = document.querySelector(selector);
+    var layer;
+    if (par.getAttribute('data-type') == 'comment') {
+        layer = 1;
+    }
+    else {
+        layer = 0;
+    }
+    var color;
+    if (par.getAttribute('data-color') == 0 && par.getAttribute('data-type') == 'comment') {
+        color = 1;
+    }
+    else {
+        color = 0;
+    }
+
+    var element = document.createElement("div");
+    var article = document.createElement('article');
+    var header = document.createElement('header');
+    var body = document.createElement('div');
+    var footer = document.createElement('footer');
+    var ul;
+    var li;
+    var i;
+
+    element.setAttribute('class', 'post-item item item-inside');
+    element.setAttribute('data-comment-id', id);
+    element.setAttribute('data-type', 'comment');
+    element.setAttribute('data-layer', layer);
+    element.setAttribute('data-color', color);
+    article.setAttribute('class', 'post');
+    header.setAttribute('class', 'post-header');
+    body.setAttribute('class', 'post-body');
+    footer.setAttribute('class', 'post-footer');
+
+    ul = document.createElement('ul');
+    li = document.createElement('li');
+    li.innerHTML = author;
+    ul.appendChild(li);
+    li = document.createElement('li');
+    li.innerHTML = new Date(Date.parse(date));
+    ul.appendChild(li);
+    header.appendChild(ul);
+
+    body.innerHTML = message;
+
+    ul = document.createElement('ul');
+    li = document.createElement('li');
+    i = document.createElement('i');
+    i.setAttribute('class', 'fas fa-reply');
+    i.addEventListener('click', reply)
+    li.appendChild(i);
+    ul.appendChild(li);
+    li = document.createElement('li');
+    i = document.createElement('i');
+    i.addEventListener('click', show_replies)
+    i.setAttribute('class', 'fas fa-eye');
+    li.appendChild(i);
+    ul.appendChild(li);
+    footer.appendChild(ul);
+
+    article.appendChild(header);
+    article.appendChild(body);
+    article.appendChild(footer);
+
+    element.appendChild(article);
+
+    selector = '[data-comment-id = ' + '"' + id + '"' +']';
+
+    var current = document.querySelector(selector);
+    if (current !== null) {
+        current.remove();
+    }
+
+    if (par.getAttribute('data-type') == 'comment') {
+        par.appendChild(element);
+    }
+    else {
+        document.querySelector("#main-body").appendChild(element);
+    }
+};
+
 function show_replies(event) {
-    elem = event.currentTarget.parentNode.parentNode
-    var ajaxRequest;
+    var topic = document.querySelector("[data-type='topic']").getAttribute('data-topic-id');
+    var comment = event.currentTarget.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute('data-comment-id');
+    var request;
     try {
-        ajaxRequest = new XMLHttpRequest();
+        request = new XMLHttpRequest();
     } catch (e) {
         alert("Nie je možné spojenie");
         return false;
     }
-    ajaxRequest.open("GET", "/comments/" + elem.getAttribute("id").split('-')[1], true);
-    ajaxRequest.setRequestHeader("Content-type", "x-www-form-urlencoded");
-    ajaxRequest.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-    ajaxRequest.onreadystatechange = () => {
-        
-        if (ajaxRequest.readyState == 4 && ajaxRequest.status >= 200 && ajaxRequest.status < 400) {
-            comments = JSON.parse(ajaxRequest.responseText)["comments"];
+
+    request.open("GET", '/comments/' + topic + '/' + comment, true);
+    request.setRequestHeader("Content-type", "x-www-form-urlencoded");
+    request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    request.onreadystatechange = () => {
+        if (request.readyState == 4 && request.status >= 200 && request.status < 400) {
+            var comments = JSON.parse(request.responseText)['comments'];
+            console.log(comments);
             comments.forEach(element => {
-                div_main = document.createElement("div");
-                div_main.setAttribute("class", "item item-inside");
-                div_main.setAttribute("id", "post-" + element["id"]);
-                div_mess = document.createElement("div");
-                div_mess.innerHTML = element["message"];
-                div_author = document.createElement("div");
-                div_author.innerHTML = element["author"];
-                div_fas = document.createElement("div");
-                div_fa = document.createElement("div");
-                i_fas = document.createElement("i");
-                i_fas.setAttribute("class", "fas fa-reply");
-                div_fas.appendChild(i_fas);
-                div_main.appendChild(div_mess);
-                div_main.appendChild(div_author);
-                div_main.appendChild(div_fas);
-                document.querySelector("#post-" + element["parent"]).appendChild(div_main);
-                i_fas.addEventListener("click", create_form);
+                create_reply(element['id'], element['parent'], element['author'], element['date'], element['message']);
             });
+        }
+        else {
 
         }
-    }
-    ajaxRequest.send();
+    };
+    request.send();
 };
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
@@ -62,69 +136,64 @@ function getCookie(name) {
     }
     return cookieValue;
 };
-function create_form(event) {
-    event.currentTarget.style.display = "none";
-    inp = document.createElement("INPUT");
-    inp.setAttribute("type", "text");
-    inp.classList.add("reply-text");
-    but = document.createElement("INPUT");
-    but.setAttribute("type", "submit");
-    but.value = "Odpovedať";
-    form = document.createElement("form");
-    form.setAttribute("method", "post");
-    form.setAttribute("action", "reply");
-    form.setAttribute("id", "post-form");
-    form.appendChild(inp);
-    form.appendChild(but);
-    el = document.createElement("div");
-    el.classList.add("item-inside");
-    el.classList.add("reply-form");
-    el.appendChild(form);
-    event.currentTarget.parentNode.insertBefore(el, event.currentTarget.nextSibling);
-    but.addEventListener("click", (event) => {
-        event.preventDefault();
-        reply(event.currentTarget.parentNode.parentNode.parentNode.parentNode);
-    });
+
+function create_form(element) {
+    var input = document.createElement('textarea');
+    input.setAttribute('rows', '1');
+    element.append(input);
 };
-function reply(elem) {
-    var ajaxRequest;
+
+function send_reply(event) {
+    
+
+    var topic = document.querySelector("[data-type='topic']").getAttribute('data-topic-id');
+    var footer = event.currentTarget.parentNode.parentNode.parentNode;
+    var parent = footer.parentNode.parentNode.getAttribute('data-comment-id');
+    var text_area = footer.querySelector("textarea");
+    var value = text_area.value;
+    var request;
+
+    event.currentTarget.removeEventListener("click", send_reply);
+    event.currentTarget.parentNode.nextElementSibling.style.display = 'initial';
+    text_area.remove();
+
+    if (!value || value.trim() == '') {
+        alert('Nie je možné odoslať komentár bez textu!');
+        event.currentTarget.addEventListener("click", reply);
+        return false;
+    }
+
     try {
-        ajaxRequest = new XMLHttpRequest();
+        request = new XMLHttpRequest();
     } catch (e) {
         alert("Nie je možné spojenie");
         return false;
     }
-    ajaxRequest.open("POST", "/reply", true);
-    ajaxRequest.setRequestHeader("Content-type", "application/json");
-    ajaxRequest.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-    ajaxRequest.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-    ajaxRequest.onreadystatechange = () => {
-        
-        if (ajaxRequest.readyState == 4 && ajaxRequest.status >= 200 && ajaxRequest.status < 400) {
-            data = JSON.parse(ajaxRequest.responseText);
-            comment = JSON.parse(data["comment"]);
-            fields = comment["fields"];
-            div_main = document.createElement("div");
-            div_main.setAttribute("class", "item item-inside");
-            div_main.setAttribute("id", "post-" + comment["pk"]);
-            div_mess = document.createElement("div");
-            div_mess.innerHTML = fields["message"];
-            div_author = document.createElement("div");
-            div_author.innerHTML = data["author"];
-            div_fas = document.createElement("div");
-            div_fa = document.createElement("div");
-            i_fas = document.createElement("i");
-            i_fas.setAttribute("class", "fas fa-reply");
-            div_fas.appendChild(i_fas);
-            div_main.appendChild(div_mess);
-            div_main.appendChild(div_author);
-            div_main.appendChild(div_fas);
-            elem.querySelector(".reply-form").remove();
-            elem.querySelector(".fa-reply").style.display = "initial";
-            elem.appendChild(div_main);
-            i_fas.addEventListener("click", create_form);
+
+    request.open("POST", "/reply", true);
+    request.setRequestHeader("Content-type", "application/json");
+    request.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    request.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+    request.onreadystatechange = () => {
+        if(request.readyState == 4) {
+            if (request.status >= 200 && request.status < 400) {
+                var element = JSON.parse(request.responseText);
+                console.log(element);
+                create_reply(element['id'], element['parent'], element['author'], element['date'], element['message']);
+            }
+            else {
+                alert('Pre pridanie komentára sa musite prihlásiť');
+            }
         }
     }
-    ajaxRequest.send(JSON.stringify({'message' : elem.querySelector(".reply-text").value, 'topic' : document.querySelector('[id^=topic-]').getAttribute("id")
-    .split('-')[1], 'parent_id' : elem.getAttribute("id").split('-')[1]}));
+    request.send(JSON.stringify({'message' : value, 'parent_id' : parent, 'topic' : topic}))
+    event.currentTarget.addEventListener("click", reply);
+}
+
+function reply(event) {
+    var footer = event.currentTarget.parentNode.parentNode.parentNode;
+    event.currentTarget.removeEventListener("click", reply);
+    event.currentTarget.parentNode.nextElementSibling.style.display = 'none';
+    create_form(footer);
+    event.currentTarget.addEventListener("click", send_reply);
 };

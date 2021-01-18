@@ -1,8 +1,8 @@
-from django.core import validators
 from django import forms
-from django.contrib.auth import authenticate, login, get_user_model as User
+from django.contrib.auth import get_user_model as User
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import gettext_lazy as _
+from .models import Discussion, Comment
 
 
 
@@ -38,10 +38,26 @@ class LoginForm(AuthenticationForm):
 class ReplyForm(forms.Form):
     message = forms.CharField()
     topic = forms.IntegerField()
-    parent_id = forms.IntegerField()
+    parent_id = forms.IntegerField(required=False)
+    
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        status = False
+        if 'topic' not in cleaned_data:
+            self.add_error('topic', forms.ValidationError(_('ID diskusie nesmie byť prázdne'), code ='required'))
+            status = True
+        if 'message' not in cleaned_data or cleaned_data['message'].strip() == '':
+            self.add_error('message', forms.ValidationError(_('Správa nesmie byť prázdna'), code ='required'))
+            status = True
+        if status:
+            return cleaned_data
+        comment = Comment.objects.filter(id = cleaned_data['parent_id']).first() if 'parent_id' in cleaned_data else None
+        topic = Discussion.objects.filter(id = cleaned_data['topic']).first()
+        if comment is not None and comment.discussion_id != topic:
+            self.add_error(None, forms.ValidationError(_('Daná otázka nepatrí do diskusie'), code ='invalid'))
+        return cleaned_data
 
 
-        
 
 
         

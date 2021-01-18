@@ -1,14 +1,12 @@
-from django.core.checks import messages
-from django.core import serializers
 from django.shortcuts import render
 from django.views import View
 from django.contrib.auth import login, logout, authenticate
-from django.http import HttpResponseRedirect, request, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from .models import Discussion, Comment
 from django.views.generic import ListView
 from .forms import DiscussionForm, LoginForm, ReplyForm
-from urllib.parse import unquote
+from django.contrib.auth.decorators import login_required
 import json
 
 
@@ -54,7 +52,6 @@ class EditView(View):
         if discussion is not None and (request.user.is_superuser or request.user == discussion.author):
             form = DiscussionForm()
         else:
-
             form = None
         return render(request, 'app/edit.html', {'discussion': discussion, 'form': form})
 
@@ -102,17 +99,23 @@ def remove_discussion(request, pk):
     else:
         return HttpResponseRedirect(reverse('app:login'))
     
-def get_comment(request, pk):
+def get_comments(request, topic, comment):
     if request.is_ajax() and request.method == 'GET':
-        comment = Comment.objects.filter(pk = pk).first()
-        comments = comment.get_comments(False)
+        comments = Comment.get_comments(topic, comment)
         return JsonResponse({'comments': comments}, status=200)
     return JsonResponse({'error': ''}, status=400)
 
+def get_comments_all(request, topic):
+    if request.is_ajax() and request.method == 'GET':
+        comments = Comment.get_comments_all(topic)
+        return JsonResponse({'comments': comments}, status=200)
+    return JsonResponse({'error': ''}, status=400)
+
+
+@login_required
 def reply(request):
     if request.is_ajax() and request.method == 'POST' and request.user.is_authenticated:
         data = json.loads(request.body)
-        print(data)
         form = ReplyForm(data)
         if form.is_valid():
             comment = Comment(
@@ -122,7 +125,7 @@ def reply(request):
                 author = request.user,
             )
             comment.save()
-            ser_comment = serializers.serialize('json', [comment,])[1:-1]
-            return JsonResponse({'comment': ser_comment, 'author' : request.user.username}, status=200)
+            return JsonResponse({'id': comment.id, 'parent' : comment.parent_id.id if comment.parent_id else "",
+                'message' : comment.message, 'author' : request.user.username, 'date' : comment.date}, status=200)
         return JsonResponse({'error': form.errors}, status=400)
     return JsonResponse({'error': ''}, status=400)

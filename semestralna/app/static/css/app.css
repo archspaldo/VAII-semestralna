@@ -18,6 +18,68 @@ body::after{
     z-index: -1;
 }
 
+textarea {
+    -webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+    resize: none;
+	width: 100%;
+}
+
+.item[data-color = "1"] {
+    background-color: gray !important;
+}
+
+.post-item[data-layer = "1"] {
+    margin-bottom: 0;
+}
+
+.post-header {
+    margin-bottom: 5px;
+}
+
+.post-header > div {
+    font-size: 2rem;
+}
+
+.post-header > ul {
+    position: relative;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.post-header > ul > li {
+    display: inline;
+    margin-right: 10px;
+}
+
+.post-body {
+    position: relative;
+    overflow: auto;
+    overflow-wrap: break-word;
+}
+
+.post-footer {
+    margin-top: 20px;
+    margin-bottom: -5px;
+}
+
+.post-footer > ul {
+    position: relative;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.post-footer > ul > li {
+    display: inline;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+
+
+
 .item-container{
     height: 100%;
     overflow: auto;

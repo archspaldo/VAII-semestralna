@@ -1,8 +1,11 @@
 {% extends 'app/base.html' %}
-
+{% load static %}
 
 {% block title %}Discussion{% endblock title %}
 
+{% block script %}
+<script src="{% static 'js\index.js' %}"></script>
+{% endblock script %}
 
 {% block body %}
 <div class="container">
@@ -35,18 +38,24 @@
                 {% if discussion %}
 
                 {% for item in discussion %}
-                <div class="item infinite-item ">
-                    <div class="item-inside">
-                        <h3 class='discussion-item-title'><a href="edit/{{item.id}}">{{item.title}}</a></h3>
-                        <ul class='discussion-item-list'>
-                            <li class='discussion-item-author'>{{item.author}}</li>
-                            <li class='discussion-item-description'>{{item.description}}</li>
-                        </ul>
-                        <ul class='discussion-item-list discussion-item-stats'>
-                            <li class='discusion-item-like'><i class="fas fa-thumbs-up"></i></li>
-                            <li class='discussion-item-views'><i class="fas fa-eye"></i></li>
-                        </ul>
-                    </div>
+                <div class='post-item item item-inside' data-comment-id='' data-type='topic' data-topic-id={{item.id}} data-layer='0' data-color='0'>
+                    <article class='post'>
+                        <header class='post-header'>
+                            <div>
+                                <a href="{% url 'app:discussion' item.id %}">{{item.title}}</a>
+                            </div>
+                            <ul>
+                                <li>{{item.author}}</li>
+                                <li>{{item.date}}</li>
+                            </ul>
+                        </header>
+                        <div class='post-body'>
+                            {{item.description}}
+                        </div>
+                        <footer class='post-footer'>
+                            
+                        </footer>
+                    </article>
                 </div>
                 {% endfor %}
 
@@ -70,21 +79,4 @@
         </div>
     </div>
 </div>
-{% endblock body %}
-
-
-{% block script %}
-<script>
-    var infinite = new Waypoint.Infinite({
-        element: $('.infinite-container')[0],
-        context: document.getElementById('main-body'),
-        onBeforePageLoad: function () {
-            $('.loading').show();
-        },
-        onAfterPageLoad: function ($items) {
-            $('.loading').hide();
-        }
-    });
-</script>
-{% endblock script %}
-    
+{% endblock body %}    
