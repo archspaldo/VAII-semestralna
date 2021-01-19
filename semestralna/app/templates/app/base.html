@@ -45,7 +45,7 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" id="odhlasenie" href="{% url 'app:user_logout' %}">Odhlásiť sa</a>
+                    <a class="nav-link login" href="{% url 'app:user_logout' %}">Odhlásiť sa</a>
                 </li>
                 {% endif %}
             </ul>

@@ -25,7 +25,7 @@ class TestView(View):
 class LoginView(View):
     def get(self, request):
         if request.user.is_authenticated:
-            return render(request, 'app/logged_in.html')
+            return HttpResponseRedirect(reverse('app:index'))
         else:
             form = LoginForm()
             return render(request, 'app/login.html', {'form': form})

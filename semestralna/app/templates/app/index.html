@@ -35,10 +35,12 @@
         <div class="col-lg-9 col-md-8 item-container" id='main-body'>
             <div class="infinite-container">
 
+                
+
                 {% if discussion %}
 
                 {% for item in discussion %}
-                <div class='post-item item item-inside' data-comment-id='' data-type='topic' data-topic-id={{item.id}} data-layer='0' data-color='0'>
+                <div class='post-item item item-inside' data-type='topic' data-topic-id={{item.id}}>
                     <article class='post'>
                         <header class='post-header'>
                             <div>

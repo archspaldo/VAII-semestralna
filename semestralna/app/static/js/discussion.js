@@ -48,12 +48,19 @@ function create_reply(id, parent, author, date, message) {
 
     ul = document.createElement('ul');
     li = document.createElement('li');
+
     li.innerHTML = author;
     ul.appendChild(li);
     li = document.createElement('li');
     li.innerHTML = new Date(Date.parse(date));
     ul.appendChild(li);
     header.appendChild(ul);
+
+    var lt = /</g, 
+        gt = />/g, 
+        ap = /'/g, 
+        ic = /"/g;
+    message = message.toString().replace(lt, "&lt;").replace(gt, "&gt;").replace(ap, "&#39;").replace(ic, "&#34;");
 
     body.innerHTML = message;
 

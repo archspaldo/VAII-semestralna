@@ -56,9 +56,3 @@ class ReplyForm(forms.Form):
         if comment is not None and comment.discussion_id != topic:
             self.add_error(None, forms.ValidationError(_('Daná otázka nepatrí do diskusie'), code ='invalid'))
         return cleaned_data
-
-
-
-
-        
-

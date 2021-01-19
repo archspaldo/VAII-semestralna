@@ -27,13 +27,13 @@ class Comment(models.Model):
     def get_comments_rec(self, topic):
         r = []
         for c in Comment.objects.all().filter(parent_id=self, discussion_id=topic).select_related('author'):
-            r.append({ 'id' : c.id ,'parent' : c.parent_id.id, 'message' : c.message, 'author' : c.author.username, 'date' : c.date})
-            _r = c.get_comments(True)
+            r.append({ 'id' : c.id ,'parent' :  c.parent_id.id if c.parent_id else '', 'message' : c.message, 'author' : c.author.username if c.author else '', 'date' : c.date})
+            _r = c.get_comments_rec(topic)
             if 0 < len(_r):
                 r.extend(_r)
         return r
 
-    def get_comments(self, topic, comment):
+    def get_comments(topic, comment):
         _comment = Comment.objects.filter(pk = comment).first()
         _topic = Discussion.objects.filter(pk = topic).first()
         return _comment.get_comments_rec(_topic)
